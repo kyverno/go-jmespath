@@ -82,3 +82,22 @@ func TestInterpreter(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 2.0, result)
 }
+
+func TestContainsWithUncomparableElements(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		expression string
+		expected   bool
+	}{
+		{"contains(`[{\"k\": \"v\"}]`, `{\"k\": \"v\"}`)", true},
+		{"contains(`[{\"k\": \"v\"}]`, `{\"k\": \"x\"}`)", false},
+		{"contains(`[[1, 2], [3]]`, `[3]`)", true},
+		{"contains(`[[1, 2], [3]]`, `[1]`)", false},
+		{"contains(`[\"a\", {\"k\": \"v\"}]`, 'a')", true},
+	}
+	for _, tt := range tests {
+		result, err := Search(tt.expression, nil)
+		assert.Nil(err, tt.expression)
+		assert.Equal(tt.expected, result, tt.expression)
+	}
+}

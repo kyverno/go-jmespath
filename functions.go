@@ -459,7 +459,7 @@ func jpfContains(arguments []interface{}) (interface{}, error) {
 	// Otherwise this is a generic contains for []interface{}
 	general := search.([]interface{})
 	for _, item := range general {
-		if item == el {
+		if objsEqual(item, el) {
 			return true, nil
 		}
 	}
